@@ -8,6 +8,7 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
+            //Console UI
             ProductManager productManager = new ProductManager(new InMemoryProductDal());
             productManager.GetAll().ForEach(x=>Console.WriteLine("{0} - {1}",x.ProductId,x.ProductName));
             
