@@ -25,7 +25,7 @@ namespace Business.Concrete
         {
             //iş kondları
             //Yetkisi var mı ? 
-            if (DateTime.Now.Hour == 22)
+            if (DateTime.Now.Hour == 18)
             {
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             }
