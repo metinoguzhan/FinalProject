@@ -10,11 +10,12 @@ namespace ConsoleUI
         static void Main(string[] args)
         {
             //Console UI
-            ForProduct();
-            ForCategory();
-
+            //ForProduct();
+            //ForCategory();
+            
             //DTO => Data Transformation Object
 
+            ForMessage();
         }
 
         private static void ForCategory()
@@ -40,26 +41,46 @@ namespace ConsoleUI
             ProductManager productManager = new ProductManager(new EfProductDal());
 
             Console.WriteLine("**   Bütün  Liste   **");
-            productManager.GetAll().ForEach(x => Console.WriteLine("{0} - {1}", x.ProductId, x.ProductName, x.UnitPrice));
+            productManager.GetAll().Data.ForEach(x => Console.WriteLine("{0} - {1} - {2}", x.ProductId, x.ProductName, x.UnitPrice));
+            Console.WriteLine(productManager.GetAll().Message);
             Console.WriteLine("-------------------------------------------------------\n");
 
             Console.WriteLine("**   KategoriId Göre  **");
             productManager.GetAllByCategoryId(1)
-                .ForEach(p => Console.WriteLine("{0} - {1} - {2}", p.ProductId, p.ProductName, p.UnitPrice));
+                .Data.ForEach(p => Console.WriteLine("{0} - {1} - {2}", p.ProductId, p.ProductName, p.UnitPrice));
+            Console.WriteLine(productManager.GetAll().Message);
             Console.WriteLine("-------------------------------------------------------\n");
 
             Console.WriteLine("**   Fiyata Göre  **");
             productManager.GetByUnitPrice(10, 15)
-                .ForEach(p => Console.WriteLine("{0} - {1} - {2}", p.ProductId, p.ProductName, p.UnitPrice));
+                .Data.ForEach(p => Console.WriteLine("{0} - {1} - {2}", p.ProductId, p.ProductName, p.UnitPrice));
+            Console.WriteLine(productManager.GetAll().Message);
             Console.WriteLine("-------------------------------------------------------\n");
             Console.WriteLine("\n\n");
 
-            Console.WriteLine("**   Fiyata Göre  **");
-            productManager.GetProductDetails().ForEach(p => Console.WriteLine("{0} / {1} / {2} / {3}", p.ProductId, p.ProductName, p.UnitsInStock, p.CategoryName));
+            Console.WriteLine("**   Inner Join   **");
+            productManager.GetProductDetails().Data.ForEach(p => Console.WriteLine("{0} / {1} / {2} / {3}", p.ProductId, p.ProductName, p.UnitsInStock, p.CategoryName));
+            Console.WriteLine(productManager.GetAll().Message);
             Console.WriteLine("-------------------------------------------------------\n");
             Console.WriteLine("\n\n");
         }
 
+        private static void ForMessage()
+        {
+            ProductManager productManager = new ProductManager(new EfProductDal());
+            var result = productManager.GetAll();
 
+            if (result.Success)
+            {
+                foreach (var data in result.Data)
+                {
+                    Console.WriteLine("{0} / {1} / {2}",data.ProductId,data.ProductName,data.UnitPrice);
+                }
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+        }
     }
 }
