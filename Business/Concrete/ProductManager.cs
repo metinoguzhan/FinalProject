@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business.Abstract;
+using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DTOs;
@@ -20,39 +21,45 @@ namespace Business.Concrete
             _productDal = productDal;
         }
 
-        public IDataResult<List<Product>> GetAll()
+        public IDataResult<List<Product>>  GetAll()
         {
             //iş kondları
             //Yetkisi var mı ? 
-            return new DataResult<List<Product>>(_productDal.GetAll(), true, "Ürünler Listelendi");
+            if (DateTime.Now.Hour == 22)
+            {
+                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+            }
+            
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductAdded);
+
         }
 
-        public IDataResult<List<Product>> GetAllByCategoryId(int id)
+        public List<Product> GetAllByCategoryId(int id)
         {
-            return new DataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id), true, "Ürün Listelendi");
+            return _productDal.GetAll(p => p.CategoryId == id);
 
         }
 
-        public IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max)
+        public List<Product> GetByUnitPrice(decimal min, decimal max)
         {
-            return new DataResult<List<Product>>(_productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max), true, "Ürün Listelendi");
+            return _productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max);
         }
 
-        public IDataResult<List<ProductDetailDto>> GetProductDetails()
+        public List<ProductDetailDto> GetProductDetails()
         {
-            return new DataResult<List<ProductDetailDto>>(_productDal.GetProductDetails(), true, "Ürün Listelendi");
+            return _productDal.GetProductDetails();
         }
 
         public IResult Add(Product product)
         {
             //Business codes..
             _productDal.Add(product);
-            return new Result(true, "Ürün Eklendi");
+            return new SuccessResult(Messages.ProductAdded);
         }
 
-        public IDataResult<Product> GetById(int productId)
+        public Product GetById(int productId)
         {
-            return new DataResult<Product>(_productDal.Get(p => p.ProductId == productId),true,"Ürün Listelendi");
+            return _productDal.Get(p => p.ProductId == productId);
         }
     }
 }
