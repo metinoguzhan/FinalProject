@@ -12,6 +12,9 @@ namespace ConsoleUI
             //Console UI
             ForProduct();
             ForCategory();
+
+            //DTO => Data Transformation Object
+
         }
 
         private static void ForCategory()
@@ -48,6 +51,11 @@ namespace ConsoleUI
             Console.WriteLine("**   Fiyata Göre  **");
             productManager.GetByUnitPrice(10, 15)
                 .ForEach(p => Console.WriteLine("{0} - {1} - {2}", p.ProductId, p.ProductName, p.UnitPrice));
+            Console.WriteLine("-------------------------------------------------------\n");
+            Console.WriteLine("\n\n");
+
+            Console.WriteLine("**   Fiyata Göre  **");
+            productManager.GetProductDetails().ForEach(p => Console.WriteLine("{0} / {1} / {2} / {3}", p.ProductId, p.ProductName, p.UnitsInStock, p.CategoryName));
             Console.WriteLine("-------------------------------------------------------\n");
             Console.WriteLine("\n\n");
         }
